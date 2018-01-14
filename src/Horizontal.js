@@ -176,11 +176,11 @@ export default class CubeNavigationHorizontal extends React.Component {
 
     return (
       <Animated.View
-        style={{ backgroundColor: "#000" }}
+        style={{ backgroundColor: "transparent", width, height }}
         ref={view => { this._scrollView = view; }}
         {...this._panResponder.panHandlers}
       >
-        <Animated.View style={[{ backgroundColor: '#000', position: 'absolute', width, height }, expandStyle]}>
+        <Animated.View style={[{ backgroundColor: 'transparent', position: 'absolute', width, height }, expandStyle]}>
           {this.props.children.map(this._renderChild)}
         </Animated.View>
       </Animated.View>
