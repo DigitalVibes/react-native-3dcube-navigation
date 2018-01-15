@@ -7,7 +7,7 @@ export default class CubeNavigationHorizontal extends React.Component {
   constructor(props) {
     super(props)
 
-    this.pages = this.props.children.map((child, index) => width * -index)
+    this.pages = this.props.cards.map((child, index) => width * -index)
 
     this.state = {
       scrollLockPage: this.pages[this.props.scrollLockPage]
@@ -181,7 +181,7 @@ export default class CubeNavigationHorizontal extends React.Component {
         {...this._panResponder.panHandlers}
       >
         <Animated.View style={[{ backgroundColor: 'transparent', position: 'absolute', width, height }, expandStyle]}>
-          {this.props.children.map(this._renderChild)}
+          {this.props.cards.map(this._renderChild)}
         </Animated.View>
       </Animated.View>
     );
