@@ -175,14 +175,17 @@ export default class CubeNavigationHorizontal extends React.Component {
     let expandStyle = this.props.expandView ? { top: -100, left: 0, width, height: height + 200 } : { width, height }
 
     return (
-      <Animated.View
-        style={{ backgroundColor: "transparent", width, height }}
-        ref={view => { this._scrollView = view; }}
-        {...this._panResponder.panHandlers}
-      >
-        <Animated.View style={[{ backgroundColor: 'transparent', position: 'absolute', width, height }, expandStyle]}>
-          {this.props.cards.map(this._renderChild)}
-        </Animated.View>
+      // <Animated.View
+      //   style={{ backgroundColor: "transparent", width, height }}
+      //   ref={view => { this._scrollView = view; }}
+      //   {...this._panResponder.panHandlers}
+      // >
+      //   <Animated.View style={[{ backgroundColor: 'transparent', position: 'absolute', width, height }, expandStyle]}>
+      //     {this.props.cards.map(this._renderChild)}
+      //   </Animated.View>
+      // </Animated.View>
+      <Animated.View style={{ backgroundColor: "transparent", width, height }}>
+       {this.props.cards.map(this._renderChild)}
       </Animated.View>
     );
   }
