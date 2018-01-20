@@ -10,7 +10,8 @@ export default class CubeNavigationHorizontal extends React.Component {
     this.pages = this.props.cards.map((child, index) => width * -index)
 
     this.state = {
-      scrollLockPage: this.pages[this.props.scrollLockPage]
+      scrollLockPage: this.pages[this.props.scrollLockPage],
+      currentPage: 0
     }
 
   }
@@ -28,14 +29,17 @@ export default class CubeNavigationHorizontal extends React.Component {
       onStartShouldSetPanResponder: (evt, gestureState) => {
         return Math.abs(gestureState.dx) > Math.abs(gestureState.dy * 3);
       },
-      onMoveShouldSetResponderCapture: () => true,
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => Math.abs(gestureState.dx) > 40 /*&& gestureState.dy !== 0*/,
+      onMoveShouldSetResponderCapture: (evt, gestureState) => {
+        return Math.abs(gestureState.dx) > Math.abs(gestureState.dy * 3);
+      },
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
+        return Math.abs(gestureState.dx) > 40; /*&& gestureState.dy !== 0*/
+      },
       onPanResponderGrant: (e, gestureState) => {
-        this._animatedValue.stopAnimation()
+        this._animatedValue.stopAnimation();
         this._animatedValue.setOffset({ x: this._value.x, y: this._value.y });
       },
       onPanResponderMove: (e, gestureState) => {
-
         Animated.event([
           null, { dx: this._animatedValue.x }
         ])(e, gestureState)
@@ -73,17 +77,24 @@ export default class CubeNavigationHorizontal extends React.Component {
   /*
     @page: index
   */
-  scrollTo(page, animated) {
-    animated = animated ? true : false
-
+  scrollTo(toPage, animated, fromPage = false) {
+    animated = animated ? true : false;
+    if (fromPage) {
+      this._animatedValue.setValue({ x: this.pages[fromPage], y: 0 });
+    }
     if (animated) {
+      this._animatedValue.x._offset = 0;
       Animated.spring(this._animatedValue, {
-        toValue: { x: this.pages[page], y: 0 },
+        toValue: { x: this.pages[toPage], y: 0 },
         friction: 4,
         tension: 0.8
-      }).start()
+      }).start();
+
+      setTimeout(() => {
+        if (this.props.callBackAfterSwipe) this.props.callBackAfterSwipe(toPage)
+      }, 500);
     } else {
-      this._animatedValue.setValue({ x: this.pages[page], y: 0 });
+      this._animatedValue.setValue({ x: this.pages[toPage], y: 0 });
     }
   }
 
@@ -177,14 +188,14 @@ export default class CubeNavigationHorizontal extends React.Component {
     let expandStyle = this.props.expandView ? { top: -100, left: 0, width, height: height + 200 } : { width, height }
 
     return (
-       <Animated.View
-         style={{ backgroundColor: "transparent", width, height }}
-         ref={view => { this._scrollView = view; }}
-         {...this._panResponder.panHandlers}
-       >
-         <Animated.View style={[{ backgroundColor: 'transparent', position: 'absolute', width, height }, expandStyle]}>
-           {this.props.cards.map(this._renderChild)}
-         </Animated.View>
+      <Animated.View
+        style={{ backgroundColor: "transparent", width, height }}
+        ref={view => { this._scrollView = view; }}
+        {...this._panResponder.panHandlers}
+      >
+        <Animated.View style={[{ backgroundColor: 'transparent', position: 'absolute', width, height }, expandStyle]}>
+          {this.props.cards.map(this._renderChild)}
+        </Animated.View>
       </Animated.View>
     );
   }
