@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { PanResponder, Animated, Dimensions, StyleSheet, Image, View, Text } from 'react-native';
+import { PanResponder, Animated, Dimensions, StyleSheet, Image, View, Text, Platform } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
 export default class CubeNavigationHorizontal extends React.Component {
@@ -55,11 +55,20 @@ export default class CubeNavigationHorizontal extends React.Component {
           let goTo = this._closest(this._value.x + (gestureState.dx))
           if (this.lockLast > goTo) return //remove in the future
           this._animatedValue.flattenOffset({ x: this._value.x, y: this._value.y });
-          Animated.spring(this._animatedValue, {
-            toValue: { x: goTo, y: 0 },
-            bounciness: 0,
-            speed: 60
-          }).start()
+          
+          if (Platform.OS === 'android') {
+            Animated.spring(this._animatedValue, {
+              toValue: { x: goTo, y: 0 },
+              bounciness: 0,
+              speed: 30
+            }).start()
+          } else {
+            Animated.spring(this._animatedValue, {
+              toValue: { x: goTo, y: 0 },
+              friction: 3,
+              tension: 0.6
+            }).start()
+          }
           setTimeout(() => {
             if (this.props.callBackAfterSwipe) this.props.callBackAfterSwipe(goTo)
           }, 500);
@@ -84,11 +93,19 @@ export default class CubeNavigationHorizontal extends React.Component {
     }
     if (animated) {
       this._animatedValue.x._offset = 0;
-      Animated.spring(this._animatedValue, {
-        toValue: { x: this.pages[toPage], y: 0 },
-        bounciness: 0,
-        speed: 60
-      }).start();
+      if (Platform.OS === 'android') {
+        Animated.spring(this._animatedValue, {
+          toValue: { x: goTo, y: 0 },
+          bounciness: 0,
+          speed: 30
+        }).start()
+      } else {
+        Animated.spring(this._animatedValue, {
+          toValue: { x: goTo, y: 0 },
+          friction: 4,
+          tension: 0.8
+        }).start()
+      }
 
       setTimeout(() => {
         if (this.props.callBackAfterSwipe) this.props.callBackAfterSwipe(toPage)
