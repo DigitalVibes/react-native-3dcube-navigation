@@ -57,8 +57,8 @@ export default class CubeNavigationHorizontal extends React.Component {
           this._animatedValue.flattenOffset({ x: this._value.x, y: this._value.y });
           Animated.spring(this._animatedValue, {
             toValue: { x: goTo, y: 0 },
-            friction: 3,
-            tension: 0.6
+            bounciness: 0,
+            speed: 60
           }).start()
           setTimeout(() => {
             if (this.props.callBackAfterSwipe) this.props.callBackAfterSwipe(goTo)
@@ -86,8 +86,8 @@ export default class CubeNavigationHorizontal extends React.Component {
       this._animatedValue.x._offset = 0;
       Animated.spring(this._animatedValue, {
         toValue: { x: this.pages[toPage], y: 0 },
-        friction: 4,
-        tension: 0.8
+        bounciness: 0,
+        speed: 60
       }).start();
 
       setTimeout(() => {
