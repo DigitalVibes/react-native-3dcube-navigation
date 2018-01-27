@@ -95,13 +95,13 @@ export default class CubeNavigationHorizontal extends React.Component {
       this._animatedValue.x._offset = 0;
       if (Platform.OS === 'android') {
         Animated.spring(this._animatedValue, {
-          toValue: { x: goTo, y: 0 },
+          toValue: { x: this.pages[toPage], y: 0 },
           bounciness: 0,
           speed: 30
         }).start()
       } else {
         Animated.spring(this._animatedValue, {
-          toValue: { x: goTo, y: 0 },
+          toValue: { x: this.pages[toPage], y: 0 },
           friction: 4,
           tension: 0.8
         }).start()
